@@ -1,0 +1,427 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --baby-pink: #FFB6C1;
+    --lavender-blush: #FFF0F5;
+    --sky-blue: #87CEEB;
+    --soft-white: #FFFFFF;
+  }
+
+  @font-face {
+    font-family: 'Fredoka';
+    src: url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
+  }
+
+  @font-face {
+    font-family: 'Quicksand';
+    src: url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+  }
+
+  body {
+    font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fredoka', 'Quicksand', sans-serif;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 2.25rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  /* Keyboard Focus Styles - Accessibility */
+  *:focus-visible {
+    outline: 3px solid var(--sky-blue);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    outline: 3px solid var(--sky-blue);
+    outline-offset: 3px;
+  }
+}
+
+@layer utilities {
+  .glow-pink {
+    box-shadow: 0 0 20px rgba(255, 182, 193, 0.6), 0 0 40px rgba(255, 182, 193, 0.4);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 15px rgba(135, 206, 235, 0.5);
+  }
+
+  .bubble-shadow {
+    box-shadow: 0 8px 32px rgba(255, 182, 193, 0.3);
+  }
+
+  .detective-gradient {
+    background: linear-gradient(135deg, #FFF0F5 0%, #FFB6C1 100%);
+  }
+
+  /* Prevent horizontal overflow in tablet sections */
+  .tablet-section * {
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* 3D Flip Animation Utilities */
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  /* Wiggle animation for avatar hover */
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg); }
+    75% { transform: rotate(5deg); }
+  }
+
+  .animate-wiggle {
+    animation: wiggle 0.5s ease-in-out;
+  }
+
+  /* Subtle wiggle hint for interactive hotspots */
+  @keyframes wiggle-hint {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-3deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(3deg); }
+  }
+
+  .animate-wiggle-hint {
+    animation: wiggle-hint 2s ease-in-out infinite;
+  }
+
+  /* Bounce hint for interactive hotspots - Game design language! */
+  /* Wait 3s, bounce twice, pause 5s, repeat */
+  @keyframes bounce-hint {
+    0%, 10%, 90%, 100% { 
+      transform: translateY(0); 
+    }
+    4%, 8% { 
+      transform: translateY(-12px); 
+    }
+    6% { 
+      transform: translateY(-8px); 
+    }
+  }
+
+  .animate-bounce-hint {
+    animation: bounce-hint 8s ease-in-out 3s infinite;
+    /* 8s total: 0.8s for bounces (10% of 8s) + 7.2s pause */
+    /* 3s delay before first animation */
+  }
+
+  /* Sparkle animation for easter egg */
+  @keyframes sparkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .animate-sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  /* Common animations */
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scale-in {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.2s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.3s ease-out;
+  }
+
+  /* Shake animation for easter egg hint */
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.6s ease-in-out;
+  }
+
+  /* Subtle bounce animation for hints */
+  @keyframes bounce-subtle {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-bounce-subtle {
+    animation: bounce-subtle 2s ease-in-out infinite;
+  }
+
+  /* Slow bounce animation for hotspot hover */
+  @keyframes bounce-slow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .animate-bounce-slow {
+    animation: bounce-slow 0.6s ease-in-out infinite;
+  }
+
+  /* Hide print-only resume on screen */
+  .print-only-resume {
+    display: none;
+  }
+}
+
+/* Print styles for resume */
+@media print {
+  @page {
+    margin: 0.5in;
+    size: letter;
+  }
+
+  /* Hide all website content */
+  .website-content,
+  .website-content * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Show only print resume */
+  .print-only-resume {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Hide any canvas elements (confetti) */
+  canvas {
+    display: none !important;
+  }
+
+  /* Print Resume Styles */
+  .print-resume {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #000;
+    background: #fff;
+    max-width: 8.5in;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Header */
+  .print-header {
+    text-align: center;
+    margin-bottom: 12pt;
+    padding-bottom: 8pt;
+    border-bottom: 2pt solid #333;
+  }
+
+  .print-header h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    margin: 0 0 4pt 0;
+    line-height: 1.2;
+  }
+
+  .print-title {
+    font-size: 12pt;
+    font-weight: normal;
+    margin: 0 0 6pt 0;
+    line-height: 1.3;
+  }
+
+  .print-contact {
+    font-size: 10pt;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 0;
+  }
+
+  .print-contact .no-break {
+    white-space: nowrap;
+  }
+
+  .print-contact .separator {
+    margin: 0 8pt;
+  }
+
+  /* Section Headings */
+  .print-section {
+    margin-bottom: 14pt;
+    page-break-inside: avoid;
+  }
+
+  .print-section-last {
+    margin-bottom: 0;
+  }
+
+  .print-section-heading {
+    font-size: 16pt;
+    font-weight: bold;
+    margin: 0 0 8pt 0;
+    padding-bottom: 4pt;
+    border-bottom: 1pt solid #666;
+    line-height: 1.2;
+    page-break-after: avoid;
+    orphans: 3;
+  }
+
+  /* Section dividers */
+  .print-divider {
+    border: none;
+    border-top: 1pt solid #ccc;
+    margin: 12pt 0 0 0;
+    page-break-after: auto;
+  }
+
+  /* Subsections */
+  .print-subsection {
+    margin-bottom: 10pt;
+    page-break-inside: avoid;
+  }
+
+  .print-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4pt;
+  }
+
+  .print-col-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .print-date {
+    font-size: 10pt;
+    color: #444;
+    margin-left: 12pt;
+    white-space: nowrap;
+  }
+
+  /* Subheadings */
+  .print-subheading {
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .print-skill-category {
+    font-size: 12pt;
+    font-weight: 600;
+    margin: 0 0 2pt 0;
+    line-height: 1.3;
+  }
+
+  /* Body Text */
+  .print-body {
+    font-size: 12pt;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .print-meta {
+    font-size: 10pt;
+    color: #555;
+    margin: 1pt 0;
+    line-height: 1.4;
+  }
+
+  /* Lists */
+  .print-list {
+    margin: 4pt 0 0 18pt;
+    padding: 0;
+    list-style-type: disc;
+  }
+
+  .print-list li {
+    font-size: 12pt;
+    line-height: 1.5;
+    margin-bottom: 3pt;
+  }
+
+  /* Skills Grid */
+  .print-skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8pt 16pt;
+  }
+
+  .print-skill-group {
+    page-break-inside: avoid;
+  }
+
+  /* Prevent awkward breaks */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  p, li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* Ensure no-break items don't split */
+  .no-break {
+    white-space: nowrap;
+    display: inline-block;
+  }
+}
