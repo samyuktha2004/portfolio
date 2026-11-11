@@ -1,180 +1,112 @@
+# Samyuktha's Portfolio
 
-  # 🌸 Samyuktha's Bubbly Detective Portfolio
+An interactive portfolio for Samyuktha S, a design engineer working across
+frontend engineering, interaction design, and applied AI.
 
-  Interactive kawaii-themed portfolio built with React, TypeScript, and Tailwind CSS.
-  Watch it in action: https://samyuktha.figma.site
+**Live site:** [samyuktha.figma.site](https://samyuktha.figma.site)
 
-  ---
+## What this project is
 
-  ## 🎯 Quick Overview
+This portfolio turns the usual resume site into a small detective-room experience. 
+Visitors can explore clickable objects, open project and background sections in a tablet-style interface, or skip directly to a traditional resume view.
 
-  A unique, fully accessible portfolio featuring:
-  - 🏠 **Interactive Detective Room** - Isometric room with clickable hotspots
-  - 📱 **Pink Tablet Modals** - Smooth, engaging section navigation
-  - 📖 **Portfolio Book** - Traditional scroll view with print support
-  - ⌨️ **Full Keyboard Navigation** - WCAG 2.1 AA compliant
-  - 🎉 **Delightful Interactions** - Confetti, animations, fortune cookie
-  - 🚀 **Performance Optimized** - Code splitting, lazy loading (60-70% bundle reduction)
+![Interactive detective room](docs/screenshots/detective-room.png)
 
-  ---
+The playful visual direction is intentional, but the content is structured for fast evaluation: role fit, selected work, outcomes, leadership experience, and contact details are all available without needing to complete the exploration.
 
-  ## 🚀 Quick Start
+## Highlights
 
-  Use the deployed version at: https://samyuktha.figma.site or view locally:
 
-  ```bash
-  npm install
-  npm run dev
-  ```
+### Sections
 
-  Open [http://localhost:3000](http://localhost:3000) in your browser.
+Each section is explorable from clicking an object in the room to reveal the descriptive view in a the tablet-style interface. For example, the achievements view.
 
-  ---
+![Achievements and awards](docs/screenshots/achievements.png)
 
-  ## ✏️ Dynamic Edit Content
+### Quick recruiter summary
 
-  All content lives in **one dynamic file** - edit once, updates everywhere:
+The summary section puts the highest-signal details first: role direction, technical range,proof of impact, leadership, and availability.
 
-  ```bash
-  /src/app/data/portfolioData.ts
-  ```
+![Quick recruiter summary](docs/screenshots/quick-recruiter-summary.png)
 
-  Change name, projects, about me, education, awards, etc. - all in one place!
+### Easter egg: Fortune cookie unlock
 
-  ---
+Exploring every section unlocks a small fortune-cookie interaction, with a few facts about me, adding a
+reward without blocking the main portfolio journey.
 
-  ## ⌨️ Keyboard Shortcuts
+![Fortune cookie unlock](docs/screenshots/fortune-cookie.png)
 
-  ### Portfolio Book (Resume View):
-  - `Ctrl/Cmd + P` or `Ctrl/Cmd + D` - Download Resume (with confetti! 🎉)
-  - `Escape` - Back to Room
-  - `Tab` - Navigate through buttons
+## What's behind the site
 
-  ### Pink Tablet (Modal):
-  - `Arrow Right/Left` - Navigate sections
-  - `Home/End` - Jump to first/last section
-  - `Escape` - Close tablet
+- **React + TypeScript:** component-based UI with typed portfolio data.
+- **Responsive interaction design:** separate mobile and desktop layouts,
+  touch-friendly controls, and responsive project sections.
+- **Accessibility-minded navigation:** semantic landmarks, labelled controls,
+  skip navigation, focus trapping for the tablet dialog, and keyboard support.
+- **Performance-conscious loading:** the tablet and resume/book views are lazy
+  loaded with `React.lazy`, while image loading uses reusable fallback helpers.
+- **Content-driven architecture:** portfolio content is centralized in
+  [`src/app/data/portfolioData.ts`](src/app/data/portfolioData.ts), so content
+  updates do not require editing each section.
 
-  ---
+## Run locally
 
-  ## 📁 Project Structure
+```bash
+pnpm install
+pnpm run dev
+```
 
-  ```
-  /src/app/data/portfolioData.ts      # 📝 Single source of truth for all content
-  /src/app/constants/theme.ts         # 🎨 Colors, spacing, animations, z-index
-  /src/app/components/               # ⚛️ React components
-    /book-sections/                  # 📖 Portfolio book sections (lazy loaded)
-    /tablet-sections/                # 📱 Pink tablet sections (lazy loaded)
-    /ui/                             # 🧩 Reusable UI components
-  /src/app/docs/                     # 📚 Comprehensive documentation
-  /src/styles/globals.css            # 🎨 Global styles & typography
-  /src/app/utils/downloadResume.ts   # 🎉 Confetti + print functionality
-  ```
+Open the local URL printed by Vite (typically
+[`http://localhost:5173`](http://localhost:5173)).
 
-  ---
+Create a production build with:
 
-  ## ✨ Key Features
+```bash
+pnpm run build
+```
 
-  ### 🎨 Design
-  - Unique kawaii-inspired theme (baby pink palette)
-  - Three distinct view modes (Room, Tablet, Book)
-  - Smooth animations and hover effects
-  - Professional yet playful aesthetic
-  - Recruiter-friendly despite cute theme
+## Useful navigation
 
-  ### ♿ Accessibility
-  - ✅ WCAG 2.1 AA compliant
-  - ✅ Full keyboard navigation
-  - ✅ Screen reader support (VoiceOver, NVDA, JAWS)
-  - ✅ Touch-friendly buttons (44x44px minimum)
-  - ✅ Proper ARIA labels
-  - ✅ Semantic HTML
+- **Room:** click the illustrated objects to explore sections.
+- **Resume:** use **Skip to Resume**, press `R`, or choose the resume button.
+- **Tablet:** use `Arrow Left` / `Arrow Right` to change sections and `Escape`
+  to close it.
+- **Resume view:** use `Escape` or **Back to Home** to return to the room.
+- **Resume download:** use the visible download button or `Cmd/Ctrl + P`.
 
-  ### 🚀 Performance
-  - ✅ Code splitting with React.lazy()
-  - ✅ Lazy loading for images
-  - ✅ Priority loading for critical assets
-  - ✅ 60-70% bundle size reduction
-  - ✅ Fast load times
-  - ✅ Optimized animations
+## Tech stack
 
-  ### 🛠️ Developer Experience
-  - ✅ Single source of truth (`portfolioData.ts`)
-  - ✅ Type-safe with TypeScript
-  - ✅ Component-based architecture
-  - ✅ Well-documented with examples
-  - ✅ Easy to maintain and update
-  - ✅ Consistent coding conventions
+React 18 · TypeScript · Vite · Tailwind CSS · Motion · Lucide React · canvas-confetti
 
-  ### 📱 Responsive Design
-  - ✅ Mobile-first approach
-  - ✅ Tested on 375px (mobile), 768px (tablet), 1024px+ (desktop)
-  - ✅ Touch-friendly on mobile
-  - ✅ Keyboard-friendly on desktop
-  - ✅ Works in all orientations
+## Project map
 
-  ---
+```text
+src/
+├── app/
+│   ├── components/       # Room, tablet, resume, and reusable UI
+│   ├── constants/        # Theme tokens
+│   ├── data/             # Single source of truth for portfolio content
+│   ├── hooks/             # Focus and form behaviour
+│   └── utils/             # Lazy-loading and resume utilities
+├── assets/               # Core interface artwork
+└── main.tsx              # Browser entry point
+docs/screenshots/         # README screenshots captured from the running app
+```
 
-  ## 🎓 What This Portfolio Demonstrates
+## For recruiters
 
-  ### Technical Skills:
-  - ⚛️ **React** - Advanced patterns, hooks, lazy loading, code splitting
-  - 📘 **TypeScript** - Type safety, interfaces, enums
-  - 🎨 **Tailwind CSS** - Utility-first styling, responsive design
-  - ♿ **Accessibility** - WCAG 2.1, ARIA, keyboard navigation
-  - 🚀 **Performance** - Optimization, lazy loading, bundle size reduction
-  - 🏗️ **Architecture** - Maintainable, scalable, documented
+Start with the [live site](https://samyuktha.figma.site), then use **Skip to
+Resume** for the fastest overview. The [quick recruiter summary](docs/screenshots/quick-recruiter-summary.png)
+shows role fit, proof of impact, leadership, and availability at a glance.
 
-  ### Design Skills:
-  - 🎨 **UI/UX Design** - User-centered, intuitive, engaging
-  - 🎭 **Interaction Design** - Smooth animations, delightful micro-interactions
-  - 📱 **Responsive Design** - Mobile-first, adaptive layouts
-  - 🌈 **Visual Design** - Cohesive theme, color theory, typography
-  - 🎯 **User Experience** - Clear navigation, multiple view modes
+For source review, the most relevant files are
+[`App.tsx`](src/app/App.tsx),
+[`DetectiveRoom.tsx`](src/app/components/DetectiveRoom.tsx),
+[`PinkTablet.tsx`](src/app/components/PinkTablet.tsx), and
+[`portfolioData.ts`](src/app/data/portfolioData.ts).
 
-  ### Soft Skills:
-  - 🏆 **Leadership** - Award-winning projects, team leadership
-  - 📝 **Communication** - Clear documentation, storytelling
-  - 🎯 **Problem Solving** - Elegant solutions to UX challenges
-  - 🔄 **Iteration** - Continuous improvement, optimization
-  - 💡 **Creativity** - Unique concept, memorable design
+## Notes
 
-  ---
-
-  ## 💼 For Recruiters
-
-  ### Why This Portfolio Stands Out:
-
-  1. **Design + Code Balance** - Demonstrates both design AND development skills
-  2. **Accessibility First** - WCAG compliant, keyboard navigation, screen reader support
-  3. **Performance Optimized** - 60-70% bundle size reduction with code splitting
-  4. **Unique Concept** - Interactive detective room (memorable, not generic)
-  5. **Award-Winning Projects** - Leadership experience and proven impact
-  6. **Fully Functional** - Print resume, contact form, smooth interactions
-  7. **Well-Documented** - Professional code quality and documentation
-
-  ### Quick Demo Points:
-  - Show the **interactive room** (let them click objects)
-  - Press **Ctrl+P** to download resume (with confetti! 🎉)
-  - Use **arrow keys** to navigate tablet sections
-  - Show **portfolio book** (traditional view with print option)
-  - Highlight **awards section** (recognition and impact)
-  - Demonstrate **responsive design** (works on phone, tablet, desktop)
-
-  ---
-
-  ## 🛠️ Tech Stack
-
-  - **Framework:** React 18
-  - **Language:** TypeScript
-  - **Styling:** Tailwind CSS v4
-  - **Icons:** Lucide React
-  - **Animation:** Motion React (Framer Motion)
-  - **Confetti:** canvas-confetti
-  - **Build Tool:** Vite
-  - **Deployment:** Ready for Vercel/Netlify/GitHub Pages
-
-  ---
-
-  *Made with 💖 by Samyuktha S, Positioning as an Engineer who can design it AND build it!*
-  
+- Portfolio content and media are intentionally kept separate from UI components where possible.
+- The project can run as a normal downloaded Vite repository or in Figma Make.
+- The screenshots in this README are generated from the running local app.
