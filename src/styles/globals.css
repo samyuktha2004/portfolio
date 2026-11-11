@@ -8,18 +8,15 @@
     --soft-white: #FFFFFF;
   }
 
-  @font-face {
-    font-family: 'Fredoka';
-    src: url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
-  }
-
-  @font-face {
-    font-family: 'Quicksand';
-    src: url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
+  body,
+  button,
+  input,
+  select,
+  textarea {
+    font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   body {
-    font-family: 'Quicksand', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     margin: 0;
     padding: 0;
     /* Custom pink cursor - base64 encoded for cross-browser compatibility */
