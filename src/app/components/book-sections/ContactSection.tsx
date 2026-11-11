@@ -1,68 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MessageSquare, Send, Loader2, AlertCircle, Sparkles, Linkedin, Github, Mail, Download } from 'lucide-react';
 import { downloadResume } from '../../utils/downloadResume';
 import { IconButton, StandardButton } from '../ui/StandardButton';
 import { personalInfo } from '../../data/portfolioData';
+import { useContactForm } from '../../hooks/useContactForm';
 
 export function ContactSection() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    honeypot: '',
-  });
-
-  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Check honeypot (spam protection)
-    if (formData.honeypot) {
-      return;
-    }
-
-    setFormState('submitting');
-
-    try {
-      const response = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
-          name: formData.name,
-          email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-          from_name: 'Portfolio Contact Form',
-          replyto: formData.email,
-        })
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setFormState('success');
-        setFormData({ name: '', email: '', subject: '', message: '', honeypot: '' });
-        setTimeout(() => setFormState('idle'), 8000);
-      } else {
-        setFormState('error');
-        setTimeout(() => setFormState('idle'), 5000);
-      }
-    } catch {
-      setFormState('error');
-      setTimeout(() => setFormState('idle'), 5000);
-    }
-  };
+  const { formData, formState, updateField, handleSubmit } = useContactForm();
 
   return (
     <section className="py-20 px-4 bg-white" id="contact" aria-labelledby="contact-heading">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center gap-3 mb-12 text-left">
           <MessageSquare className="w-8 h-8 text-[#E9518D]" aria-hidden="true" />
           <h2 id="contact-heading" className="text-[#E9518D]">Let's Connect!</h2>
         </div>
@@ -96,7 +45,7 @@ export function ContactSection() {
               type="text"
               name="honeypot"
               value={formData.honeypot}
-              onChange={(e) => setFormData({ ...formData, honeypot: e.target.value })}
+              onChange={updateField('honeypot')}
               style={{ display: 'none' }}
               tabIndex={-1}
               autoComplete="off"
@@ -110,7 +59,7 @@ export function ContactSection() {
                   id="contact-name"
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={updateField('name')}
                   className="w-full px-4 py-3 rounded-xl border-2 border-white/40 bg-white/95 text-gray-800 placeholder-gray-400 focus:border-white focus:outline-none transition-colors"
                   placeholder="Your Name"
                   required
@@ -123,7 +72,7 @@ export function ContactSection() {
                   id="contact-email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={updateField('email')}
                   className="w-full px-4 py-3 rounded-xl border-2 border-white/40 bg-white/95 text-gray-800 placeholder-gray-400 focus:border-white focus:outline-none transition-colors"
                   placeholder="you@email.com"
                   required
@@ -137,7 +86,7 @@ export function ContactSection() {
                 id="contact-subject"
                 type="text"
                 value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                onChange={updateField('subject')}
                 className="w-full px-4 py-3 rounded-xl border-2 border-white/40 bg-white/95 text-gray-800 placeholder-gray-400 focus:border-white focus:outline-none transition-colors"
                 placeholder="What's on your mind?"
                 required
@@ -149,7 +98,7 @@ export function ContactSection() {
               <textarea
                 id="contact-message"
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onChange={updateField('message')}
                 rows={6}
                 className="w-full px-4 py-3 rounded-xl border-2 border-white/40 bg-white/95 text-gray-800 placeholder-gray-400 focus:border-white focus:outline-none transition-colors resize-none"
                 placeholder="Tell me about your project or idea..."

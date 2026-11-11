@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
 import { uiLabels } from '../../data/portfolioData';
-import workButtonImage from 'figma:asset/652822e5f27e8fc1e8744901437b250d2f44b782.png';
-import skipButtonImage from 'figma:asset/85994fcc902aa4ad78c65c4b501a7b741e9c7fd3.png';
+import workButtonImage from '../../../assets/core/work-with-me-button.png';
+import skipButtonImage from '../../../assets/core/skip-to-resume-button.png';
 
 interface RoomActionButtonProps {
   onClick: () => void;
+  onPreload?: () => void;
   wrapperClassName?: string;
   imgClassName: string;
   fallbackClassName: string;
@@ -13,10 +14,10 @@ interface RoomActionButtonProps {
   showHint?: boolean;
 }
 
-export function WorkWithMeButton({ onClick, wrapperClassName = '', imgClassName, fallbackClassName, fallbackStyle, showHint }: RoomActionButtonProps) {
+export function WorkWithMeButton({ onClick, onPreload, wrapperClassName = '', imgClassName, fallbackClassName, fallbackStyle, showHint }: RoomActionButtonProps) {
   const [error, setError] = useState(false);
   return (
-    <button onClick={onClick} className={`overflow-hidden rounded-full transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl ${wrapperClassName}`}>
+    <button onClick={onClick} onMouseEnter={onPreload} onFocus={onPreload} className={`overflow-hidden rounded-full transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl ${wrapperClassName}`}>
       {!error ? (
         <img src={workButtonImage} alt={uiLabels.buttons.workWithMe} className={imgClassName} onError={() => setError(true)} />
       ) : (
@@ -38,10 +39,10 @@ export function WorkWithMeButton({ onClick, wrapperClassName = '', imgClassName,
   );
 }
 
-export function SkipButton({ onClick, wrapperClassName = '', imgClassName, fallbackClassName, fallbackStyle }: Omit<RoomActionButtonProps, 'showHint'>) {
+export function SkipButton({ onClick, onPreload, wrapperClassName = '', imgClassName, fallbackClassName, fallbackStyle }: Omit<RoomActionButtonProps, 'showHint'>) {
   const [error, setError] = useState(false);
   return (
-    <button onClick={onClick} className={`overflow-hidden rounded-full transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl ${wrapperClassName}`}>
+    <button onClick={onClick} onMouseEnter={onPreload} onFocus={onPreload} className={`overflow-hidden rounded-full transition-all duration-300 hover:scale-110 hover:drop-shadow-2xl ${wrapperClassName}`}>
       {!error ? (
         <img src={skipButtonImage} alt={uiLabels.buttons.skipToResume} className={imgClassName} onError={() => setError(true)} />
       ) : (

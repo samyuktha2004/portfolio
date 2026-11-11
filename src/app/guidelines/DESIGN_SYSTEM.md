@@ -45,14 +45,14 @@ All tokens live in `src/app/constants/theme.ts → COLORS`.
 
 ### Status Indicators
 
-| Token | Hex | Usage |
-|---|---|---|
-| `STATUS_AVAILABLE` | `#4ade80` | Green dot — open for work |
-| `STATUS_LIMITED` | `#fbbf24` | Amber dot — limited availability |
-| `STATUS_UNAVAILABLE` | `#f87171` | Red dot — not available |
-| `STATUS_NEUTRAL` | `#94a3b8` | Slate dot — unknown / unset |
+| State | Dot | Surface | Text |
+|---|---|---|---|
+| Available | `STATUS_AVAILABLE` `#4ade80` | `STATUS_AVAILABLE_BG` `#f0fdf4` | `STATUS_AVAILABLE_TEXT` `#15803d` |
+| Limited | `STATUS_LIMITED` `#fbbf24` | `STATUS_LIMITED_BG` `#fffbeb` | `STATUS_LIMITED_TEXT` `#b45309` |
+| Unavailable | `STATUS_UNAVAILABLE` `#f87171` | `STATUS_UNAVAILABLE_BG` `#fef2f2` | `STATUS_UNAVAILABLE_TEXT` `#b91c1c` |
+| Neutral | `STATUS_NEUTRAL` `#94a3b8` | `STATUS_NEUTRAL_BG` `#f8fafc` | `STATUS_NEUTRAL_TEXT` `#475569` |
 
-Status tokens are for small color dots (≤16px), not text labels.
+Dot tokens are for small indicators only. Status labels must use the paired text token.
 
 ---
 
@@ -64,8 +64,9 @@ Status tokens are for small color dots (≤16px), not text labels.
 | `PURPLE_ACCENT` | `#B298DC` | Hero gradient **end**; combined-project badges; Work With Me service icon circles, process step circles |
 | `PURPLE_DEEP` | `#9B7EDE` | Work With Me bottom-CTA gradient end; download button bg |
 | `PURPLE_TEXT` | `#7a5b8a` | Accessible purple text — flexibility section labels (~4.5:1 on white) |
+| `PURPLE_INK` | `#4B3268` | Accessible headings and body text on lavender hero surfaces |
 
-> **Hero card gradient recipe:** `bg-gradient-to-br from-[#D4B8F4] to-[#B298DC]` (`PURPLE_LIGHT` → `PURPLE_ACCENT`)
+> **Hero card recipe:** `bg-gradient-to-br from-[#D4B8F4] to-[#B298DC]` with `PURPLE_INK` text.
 > This replaces the former hot-pink hero (`from-[#E9518D] to-[#d43878]`), keeping hero sections visually distinct from `CTA_PINK` buttons.
 
 ---
@@ -107,7 +108,7 @@ Need a filled BUTTON or INTERACTIVE ELEMENT background?
 
 Need a HERO SECTION gradient?
   └─ PURPLE_LIGHT → PURPLE_ACCENT (#D4B8F4 → #B298DC) — About Me and Work With Me
-     (keeps hero visually distinct from CTA_PINK buttons)
+     + PURPLE_INK text (keeps hero readable and distinct from CTA_PINK buttons)
 
 Need a DECORATIVE fill (ring, badge bg, card, dot)?
   └─ Use brand tokens: PRIMARY_PINK, SKY_BLUE, LAVENDER, PURPLE_ACCENT, GOLD, LIGHT_PINK
@@ -144,6 +145,14 @@ All buttons: `rounded-full`, `border-2`, `min-h-[44px]` touch target.
 
 ## Typography Color Hierarchy
 
+### Font families
+
+| Role | Family | Weight |
+|---|---|---|
+| Display and section headings (`h1–h6`) | Fredoka | 500–700 |
+| Body, labels, buttons, and form controls | Quicksand | 400–600 |
+| Print-only resume | Georgia | Conventional print hierarchy |
+
 | Level | Class | Token value | Context |
 |---|---|---|---|
 | Primary headings | `text-[#E9518D]` | `PINK_TEXT` | h1–h4 in tablet sections |
@@ -152,8 +161,27 @@ All buttons: `rounded-full`, `border-2`, `min-h-[44px]` touch target.
 | Award text | `text-[#B8860B]` | `GOLD_TEXT` | Trophy/award labels |
 | Body text | `text-gray-700` | — | Main readable content |
 | Secondary text | `text-gray-500` | — | Metadata, dates, captions |
-| On dark/hero fills | `text-white` | — | Inside `CTA_PINK`, `PURPLE_ACCENT`, `PURPLE_DEEP`, `GITHUB_BG` backgrounds |
+| On lavender hero fills | `text-[#4B3268]` | `PURPLE_INK` | About Me and Work With Me hero content |
+| On dark fills | `text-white` | — | Inside `CTA_PINK`, `PURPLE_DEEP`, `GITHUB_BG` backgrounds |
 | Muted pink | `text-[#E9518D]/70` | — | Subdued pink labels |
+
+---
+
+## Alignment & Composition
+
+Use alignment to communicate hierarchy rather than applying one alignment everywhere:
+
+| Content level | Alignment |
+|---|---|
+| Hero heading, subtitle, availability, and primary CTA | Center |
+| Tablet top-level section heading and short introductory copy | Center, with a constrained text width |
+| Portfolio Book section heading paired with an icon | Left, creating a consistent recruiter-document rhythm |
+| Service cards, project details, lists, timelines, and process steps | Left |
+| Repeated cards | Consistent grid and equal-height treatment on wide screens |
+| Contact-form labels and fields | Left |
+| Closing CTA and compact reassurance copy | Center |
+
+Do not center long lists or operational details. Do not mix left- and center-aligned headings at the same hierarchy level. Set alignment on the layout boundary, not globally on heading elements.
 
 ---
 
@@ -162,15 +190,15 @@ All buttons: `rounded-full`, `border-2`, `min-h-[44px]` touch target.
 | Section | Hero gradient | Heading color | Badge/pill fill | Icon color |
 |---|---|---|---|---|
 | Detective Room | — | `PINK_TEXT` | — | `PINK_TEXT` / `PRIMARY_PINK` decorative |
-| About Me | `PURPLE_LIGHT` → `PURPLE_ACCENT` | `PINK_TEXT` | `SKY_BLUE` (bg), `BLUE_TEXT` (text) | `PINK_TEXT` |
+| About Me | `PURPLE_LIGHT` → `PURPLE_ACCENT`, `PURPLE_INK` text | `PINK_TEXT` | `SKY_BLUE` (bg), `BLUE_TEXT` (text) | `PINK_TEXT` |
 | Projects | — | `PINK_TEXT` | `PRIMARY_PINK`/`SKY_BLUE` bg fills; `PURPLE_ACCENT` combined badge | `PINK_TEXT` |
 | Design Showcase | — | `PINK_TEXT` | `CTA_PINK` active dot | `PINK_TEXT` |
 | Education | — | `PINK_TEXT` | `SKY_BLUE` bg, `BLUE_TEXT` text | `PINK_TEXT` |
 | Case Achievements | — | `PINK_TEXT` | `GOLD`/`GOLD_DARK` award bg | `GOLD_TEXT` award icons |
-| Work With Me | `PURPLE_LIGHT` → `PURPLE_ACCENT` | `PINK_TEXT` | `LAVENDER` icon circles, `PURPLE_ACCENT` step circles | `PINK_TEXT` / status dots |
+| Work With Me | `PURPLE_LIGHT` → `PURPLE_ACCENT`, `PURPLE_INK` text | `PINK_TEXT` | `PURPLE_LIGHT` icon circles, `PURPLE_ACCENT` step circles | `PURPLE_INK` / status dots |
 | PortfolioBook | — | `PINK_TEXT` | — | `PINK_TEXT` |
 
-> **Color-scheme rationale:** Hero sections use `PURPLE_LIGHT → PURPLE_ACCENT` so they are visually distinct from `CTA_PINK` interactive buttons. Work With Me card accents follow the **Tomocha project palette** (`LAVENDER` #DDA0DD, `PURPLE_ACCENT` #B298DC, `SKY_BLUE` #87CEEB) for thematic cohesion.
+> **Color-scheme rationale:** Hero sections use `PURPLE_LIGHT → PURPLE_ACCENT` with `PURPLE_INK` so they are distinct from pink CTA buttons while preserving readable text. Work With Me card accents use the same purple scale for thematic cohesion.
 
 ---
 
@@ -184,7 +212,7 @@ All buttons: `rounded-full`, `border-2`, `min-h-[44px]` touch target.
 | `text-[#DDA0DD]` (LAVENDER as text) | `text-[#7a5b8a]` (PURPLE_TEXT) on light bg |
 | `text-[#fd6698]` for static labels | `text-[#E9518D]` (PINK_TEXT) |
 | `bg-[#FFB6C1] text-white` | `bg-[#E9518D] text-white` (CTA_PINK bg) |
-| Hero card using `CTA_PINK` gradient | Hero gradient `PURPLE_LIGHT → PURPLE_ACCENT` |
+| Hero card using `CTA_PINK` gradient or white text on pastel lavender | Hero gradient `PURPLE_LIGHT → PURPLE_ACCENT` with `PURPLE_INK` text |
 | Native `title=""` for swatch tooltips | Custom Tailwind `group-hover` tooltip with outlined border |
 | Hardcoded hex not in `COLORS` | Add a semantic token to `theme.ts` first |
 | Two different pinks for same interactive meaning | Pick one: `CTA_PINK`/`PINK_TEXT` for all pink interactive |

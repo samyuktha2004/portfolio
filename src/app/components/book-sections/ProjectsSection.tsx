@@ -19,7 +19,7 @@ export function ProjectsSection() {
     const c = colors[Math.min(index, colors.length - 1)];
     return {
       title: project.title,
-      category: `${project.category}${project.technologies ? ' | ' + project.technologies.slice(0, 2).join(', ') : ''}`,
+      category: `${project.category}${project.technologies?.length ? ' | ' + project.technologies[0] : ''}`,
       gradient: c.gradient,
       badgeBg: c.badgeBg,
       badgeColor: c.badgeColor,
@@ -29,7 +29,7 @@ export function ProjectsSection() {
   return (
     <section className="py-20 px-4 bg-[#FFF0F5]" id="projects" aria-labelledby="projects-heading">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center gap-3 mb-12 text-left">
           <FolderOpen className="w-8 h-8 text-[#E9518D]" aria-hidden="true" />
           <h2 id="projects-heading" className="text-[#E9518D]">View My Work!</h2>
         </div>
@@ -43,10 +43,10 @@ export function ProjectsSection() {
               aria-label={`View ${project.title} project`}
             >
               <div className={`aspect-[4/3] bg-gradient-to-br ${project.gradient} flex items-center justify-center`}>
-                <div className="text-center text-white p-6">
+                <div className="text-center text-white p-4 sm:p-6 w-full min-w-0">
                   <h4 className="mb-3">{project.title}</h4>
                   <span
-                    className="text-xs md:text-sm px-3 py-1 rounded-full font-medium border"
+                    className="text-xs md:text-sm px-3 py-1 rounded-xl font-medium border whitespace-nowrap overflow-hidden text-ellipsis max-w-full"
                     style={{ backgroundColor: project.badgeBg, color: project.badgeColor, borderColor: project.badgeColor }}
                   >
                     {project.category}

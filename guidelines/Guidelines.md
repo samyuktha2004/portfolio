@@ -36,7 +36,9 @@
 ## Images
 
 - Use `<ImageWithFallback />` from `/components/ui/` for new images
-- Import Figma assets: `import img from 'figma:asset/[hash].png'`
+- Store core interface artwork in `/src/assets/` and import it with standard relative paths
+- Store portfolio content media in `/src/app/imports/` or use an image CDN URL
+- Do not add `figma:asset` imports; downloaded builds must remain platform-independent
 - Component returns `null` on error (clean UI)
 - Optional `showPlaceholderOnError` prop for layout-critical images
 

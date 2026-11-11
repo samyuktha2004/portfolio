@@ -1,20 +1,18 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import { ArrowLeft, Sparkles, Eye, Palette } from 'lucide-react';
-import { LoadingSpinner } from './ui/LoadingSpinner';
-
-// Lazy load book sections for better performance
-const HeroSection = lazy(() => import('./book-sections/HeroSection').then(module => ({ default: module.HeroSection })));
-const TldrSection = lazy(() => import('./book-sections/TldrSection').then(module => ({ default: module.TldrSection })));
-const AchievementsSection = lazy(() => import('./book-sections/AchievementsSection').then(module => ({ default: module.AchievementsSection })));
-const ExperienceSection = lazy(() => import('./book-sections/ExperienceSection').then(module => ({ default: module.ExperienceSection })));
-const ProjectsSection = lazy(() => import('./book-sections/ProjectsSection').then(module => ({ default: module.ProjectsSection })));
-const ContactSection = lazy(() => import('./book-sections/ContactSection').then(module => ({ default: module.ContactSection })));
+import { HeroSection } from './book-sections/HeroSection';
+import { TldrSection } from './book-sections/TldrSection';
+import { AchievementsSection } from './book-sections/AchievementsSection';
+import { ExperienceSection } from './book-sections/ExperienceSection';
+import { ProjectsSection } from './book-sections/ProjectsSection';
+import { ContactSection } from './book-sections/ContactSection';
 
 interface PortfolioBookProps {
   onBackToRoom: () => void;
+  onPreloadTablet: () => void;
 }
 
-export function PortfolioBook({ onBackToRoom }: PortfolioBookProps) {
+export function PortfolioBook({ onBackToRoom, onPreloadTablet }: PortfolioBookProps) {
   const handleOpenProjects = () => {
     window.dispatchEvent(new CustomEvent('openDevProjects'));
   };
@@ -71,6 +69,8 @@ export function PortfolioBook({ onBackToRoom }: PortfolioBookProps) {
         {/* Visual Portfolio button - right side */}
         <button
           onClick={handleOpenProjects}
+          onMouseEnter={onPreloadTablet}
+          onFocus={onPreloadTablet}
           className="px-4 sm:px-6 py-3 bg-[#E9518D] text-white rounded-full shadow-lg hover:scale-105 transition-transform flex items-center gap-2 text-sm sm:text-base font-medium min-h-[44px] whitespace-nowrap"
         >
           <Palette className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
@@ -79,21 +79,12 @@ export function PortfolioBook({ onBackToRoom }: PortfolioBookProps) {
         </button>
       </div>
 
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="flex flex-col items-center gap-4">
-            <LoadingSpinner size="large" color="pink" />
-            <p className="text-[#E9518D]">Loading portfolio...</p>
-          </div>
-        </div>
-      }>
-        <HeroSection />
-        <TldrSection />
-        <AchievementsSection />
-        <ExperienceSection />
-        <ProjectsSection />
-        <ContactSection />
-      </Suspense>
+      <HeroSection />
+      <TldrSection />
+      <AchievementsSection />
+      <ExperienceSection />
+      <ProjectsSection />
+      <ContactSection />
 
       {/* Footer */}
       <footer className="py-8 bg-[#E9518D] text-white text-center">

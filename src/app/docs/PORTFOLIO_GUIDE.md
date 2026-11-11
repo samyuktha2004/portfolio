@@ -59,20 +59,25 @@ Edit this file to change:
 
 ---
 
-### Option 2: External URLs
+### Option 2: External URLs (recommended when Make's upload limit is reached)
 
-**Best for:** Quick testing, temporary placeholders
+**Best for:** Project galleries, case-study screenshots, and portfolios that will grow beyond the local upload limit.
 
 **Recommended Services:**
-- **Imgur** - Free, fast (https://imgur.com)
-- **Cloudinary** - Professional, free tier
+- **Cloudinary** - Recommended. CDN delivery, automatic WebP/AVIF conversion, resizing, and a free tier.
+- **ImageKit** - Similar image optimization and CDN features.
+- **Vercel Blob / S3 + CloudFront** - Good when you want storage tied to your deployment stack.
+- **Imgur** - Fine for quick testing, but less suitable as the long-term source for a professional portfolio.
 
 ```typescript
-{ type: 'image', url: 'https://i.imgur.com/abc123.png' }
+{ type: 'image', url: 'https://res.cloudinary.com/your-cloud/image/upload/f_auto,q_auto,w_1600/portfolio/agriguru-hero.jpg' }
 ```
 
 **⚠️ Avoid:**
 - Google Drive (CORS issues - won't work)
+- Committing full-resolution exports when a compressed 1600px-wide WebP or AVIF will look identical in the portfolio
+
+Keep the room artwork, avatar, and other core UI assets local. Host project screenshots and event galleries on the image CDN; those remote URLs do not consume Make's local picture allowance.
 
 ---
 

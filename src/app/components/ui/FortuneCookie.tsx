@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { X } from 'lucide-react';
-import closedCookie from 'figma:asset/c29cd1607fcc894606fcfe3161d1dc2950bb3205.png';
-import openedCookie from 'figma:asset/2e70c6a7760c2ab787760473562b98733a86d585.png';
+import closedCookie from '../../../assets/core/fortune-cookie-closed.png';
+import openedCookie from '../../../assets/core/fortune-cookie-open.png';
 import { fortuneCookieFacts, fortuneCookieConfig } from '../../data/fortuneCookieData';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
+import confetti from 'canvas-confetti';
 
 const FUN_FACTS = fortuneCookieFacts;
 
@@ -17,7 +18,7 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
   const [isOpen, setIsOpen] = useState(false);
   const [showUnlockedPopup, setShowUnlockedPopup] = useState(false);
   const [fortune, setFortune] = useState('');
-  const [shownFortunes, setShownFortunes] = useState<Set<number>>(new Set());
+  const [remainingIndices, setRemainingIndices] = useState<number[]>([]);
   const [hasShownUnlockedPopup, setHasShownUnlockedPopup] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const unlockedTrapRef = useFocusTrap<HTMLDivElement>(showUnlockedPopup);
@@ -31,36 +32,32 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
 
       // Confetti celebration when unlocked!
       if (typeof window !== 'undefined') {
-        import('canvas-confetti').then((confetti) => {
-          confetti.default({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.8 },
-            colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
-            shapes: ['circle'],
-            scalar: 1.2,
-          });
-          setTimeout(() => {
-            confetti.default({
-              particleCount: 50,
-              angle: 60,
-              spread: 55,
-              origin: { x: 0 },
-              colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
-            });
-          }, 250);
-          setTimeout(() => {
-            confetti.default({
-              particleCount: 50,
-              angle: 120,
-              spread: 55,
-              origin: { x: 1 },
-              colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
-            });
-          }, 400);
-        }).catch(() => {
-          // confetti unavailable — celebration continues without it
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.8 },
+          colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
+          shapes: ['circle'],
+          scalar: 1.2,
         });
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
+          });
+        }, 250);
+        setTimeout(() => {
+          confetti({
+            particleCount: 50,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#FFB6C1', '#FFF0F5', '#87CEEB', '#DDA0DD'],
+          });
+        }, 400);
       }
     }
   }, [isUnlocked, hasShownUnlockedPopup]);
@@ -68,27 +65,17 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
   const openFortune = useCallback(() => {
     if (!isUnlocked) return;
 
-    // Reset if all fortunes have been shown
-    let availableFortunes = shownFortunes;
-    if (shownFortunes.size === FUN_FACTS.length) {
-      availableFortunes = new Set();
-      setShownFortunes(new Set());
+    // Refill and shuffle when the deck is exhausted
+    let deck = remainingIndices;
+    if (deck.length === 0) {
+      deck = FUN_FACTS.map((_, i) => i).sort(() => Math.random() - 0.5);
     }
 
-    // Find a fortune that hasn't been shown yet
-    let randomIndex: number;
-    let attempts = 0;
-    do {
-      randomIndex = Math.floor(Math.random() * FUN_FACTS.length);
-      attempts++;
-      if (attempts > 50) break;
-    } while (availableFortunes.has(randomIndex) && availableFortunes.size < FUN_FACTS.length);
-
-    const randomFortune = FUN_FACTS[randomIndex];
-    setFortune(randomFortune);
+    const [nextIndex, ...rest] = deck;
+    setRemainingIndices(rest);
+    setFortune(FUN_FACTS[nextIndex]);
     setIsOpen(true);
-    setShownFortunes(prev => new Set([...prev, randomIndex]));
-  }, [isUnlocked, shownFortunes]);
+  }, [isUnlocked, remainingIndices]);
 
   const handleUnlockedClick = () => {
     setShowUnlockedPopup(false);
@@ -108,8 +95,8 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
           ref={triggerRef}
           onClick={openFortune}
           className={`
-            fixed bottom-6 left-6 z-50
-            w-[70px] h-[70px] sm:w-[90px] sm:h-[90px]
+            fixed bottom-10 left-4 sm:bottom-6 sm:left-6 z-50
+            w-[54px] h-[54px] sm:w-[70px] sm:h-[70px]
             flex items-center justify-center
             bg-[#FFF0F5]
             rounded-full
@@ -117,7 +104,7 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
             shadow-lg
             transition-all duration-300
             hover:scale-110 hover:shadow-xl
-            group relative
+            group
             ${isOpen ? 'opacity-50' : 'opacity-100'}
           `}
           style={{
@@ -129,7 +116,7 @@ export function FortuneCookie({ isUnlocked, currentView, isTabletOpen }: Fortune
             src={closedCookie}
             alt=""
             aria-hidden="true"
-            className="w-[44px] h-[44px] sm:w-[62px] sm:h-[62px] object-contain group-hover:scale-110 transition-transform"
+            className="w-[34px] h-[34px] sm:w-[44px] sm:h-[44px] object-contain group-hover:scale-110 transition-transform"
           />
           <span aria-hidden="true" className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1 rounded-full text-xs bg-white text-[#E9518D] border border-[#FFB6C1] shadow-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10">
             Click for a fun fact!

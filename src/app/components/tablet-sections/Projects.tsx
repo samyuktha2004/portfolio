@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { Palette, Github, Eye, Award, Mail, FileDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Palette, Github, Eye, Award, Mail, FileDown, ChevronLeft, ChevronRight, Briefcase, Code2, TrendingUp, BookOpen } from 'lucide-react';
 import { StandardButton } from '../ui/StandardButton';
 import { FilterPills, FilterOption } from '../ui/FilterPills';
 import { ImageWithFallback } from '../ui/ImageWithFallback';
@@ -24,6 +24,7 @@ import gdsc3img from '@/imports/gdsc4.png';
 import gdgLogo from '@/imports/GDGDevfestLogo.png';
 import portfolioImg from '@/imports/portfolio.png';
 import agriguruImg from '@/imports/agriguru.png';
+import goingPlacesImg from '@/imports/config-india-going-places.png';
 
 type ProjectImage = { src: string };
 
@@ -43,6 +44,9 @@ const PROJECT_IMAGES: Record<string, ProjectImage[]> = {
   ],
   'This Bubbly Portfolio 🌸': [
     { src: portfolioImg },
+  ],
+  'Going Places with Figma': [
+    { src: goingPlacesImg },
   ],
   'Kaalani - Sustainable Shoe Skins 🏆': [
     { src: kaalani0 },
@@ -136,9 +140,34 @@ function ImageSlideshow({ images, title, resetKey }: { images: ProjectImage[]; t
 
 type AnyProject = typeof projects[number];
 
-type ProjectExtras = { featured?: boolean; visualElements?: string[] };
+type ProjectExtras = {
+  featured?: boolean;
+  visualElements?: string[];
+  role?: string;
+  buildFocus?: string;
+  outcome?: string;
+  caseStudy?: {
+    introduction: string;
+    sections: Array<{
+      label: string;
+      title: string;
+      body: string;
+      points: string[];
+    }>;
+  };
+};
 
-function ProjectCard({ project, animated = false, filterKey }: { project: AnyProject; animated?: boolean; filterKey?: string }) {
+function ProjectCard({
+  project,
+  animated = false,
+  filterKey,
+  onViewCaseStudy,
+}: {
+  project: AnyProject;
+  animated?: boolean;
+  filterKey?: string;
+  onViewCaseStudy?: () => void;
+}) {
   const p = project as AnyProject & ProjectExtras;
   const isCombined = project.projectType === 'combined';
   const isDesign = project.projectType === 'design';
@@ -147,6 +176,7 @@ function ProjectCard({ project, animated = false, filterKey }: { project: AnyPro
   const badgeColor = isCombined ? '#2B7FB5' : isDesign ? '#E9518D' : '#7a5b8a';
   const projectImages = PROJECT_IMAGES[project.title];
   const hasImages = projectImages && projectImages.length > 0;
+  const visualElements = p.visualElements ?? [];
 
   const inner = (
     <div className="relative bg-[#FFF0F5] rounded-2xl p-4 sm:p-6 border-2 border-[#FFB6C1]/30 shadow-lg hover:shadow-xl transition-shadow">
@@ -177,6 +207,38 @@ function ProjectCard({ project, animated = false, filterKey }: { project: AnyPro
         </div>
       </div>
 
+      {(p.role || p.buildFocus || p.outcome) && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-4" aria-label="Project evidence">
+          {p.role && (
+            <div className="bg-white rounded-xl p-3 border border-[#FFB6C1]/30">
+              <div className="flex items-center gap-2 mb-1 text-[#E9518D]">
+                <Briefcase className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                <span className="text-xs font-medium">My role</span>
+              </div>
+              <p className="text-xs text-gray-700">{p.role}</p>
+            </div>
+          )}
+          {p.buildFocus && (
+            <div className="bg-white rounded-xl p-3 border border-[#87CEEB]/50">
+              <div className="flex items-center gap-2 mb-1 text-[#2B7FB5]">
+                <Code2 className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                <span className="text-xs font-medium">Engineering focus</span>
+              </div>
+              <p className="text-xs text-gray-700">{p.buildFocus}</p>
+            </div>
+          )}
+          {p.outcome && (
+            <div className="bg-white rounded-xl p-3 border border-[#DDA0DD]/60">
+              <div className="flex items-center gap-2 mb-1 text-[#7a5b8a]">
+                <TrendingUp className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+                <span className="text-xs font-medium">Outcome</span>
+              </div>
+              <p className="text-xs text-gray-700">{p.outcome}</p>
+            </div>
+          )}
+        </div>
+      )}
+
       {hasImages && <ImageSlideshow images={projectImages} title={project.title} resetKey={filterKey} />}
 
       <div className="flex flex-wrap gap-1.5 mb-3">
@@ -186,9 +248,9 @@ function ProjectCard({ project, animated = false, filterKey }: { project: AnyPro
       </div>
 
 
-      {p.visualElements?.length > 0 && (
+      {visualElements.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">
-          {p.visualElements.map((el: string, i: number) => (
+          {visualElements.map((el: string, i: number) => (
             <span key={i} className="px-2 py-0.5 bg-[#DDA0DD]/15 text-[#7D3C98] rounded-full text-xs border border-[#DDA0DD]/60">{el}</span>
           ))}
         </div>
@@ -206,8 +268,17 @@ function ProjectCard({ project, animated = false, filterKey }: { project: AnyPro
         </ul>
       </div>
 
-      {(project.links.github || project.links.demo || project.links.design) && (
+      {((p.caseStudy && onViewCaseStudy) || project.links.github || project.links.demo || project.links.design) && (
         <div className="flex flex-wrap gap-2 justify-end">
+          {p.caseStudy && onViewCaseStudy && (
+            <StandardButton
+              icon={BookOpen}
+              label="View Case Study"
+              shortLabel="Case Study"
+              variant="secondary"
+              onClick={onViewCaseStudy}
+            />
+          )}
           {project.links.github && <StandardButton href={project.links.github} icon={Github} label="GitHub" variant="github" external />}
           {project.links.demo && <StandardButton href={project.links.demo} icon={Eye} label="Live Demo" variant="primary" external />}
           {project.links.design && <StandardButton href={project.links.design} icon={Palette} label="Design" variant="secondary" external />}
@@ -225,7 +296,64 @@ function ProjectCard({ project, animated = false, filterKey }: { project: AnyPro
 }
 
 function SingleProjectCard({ project }: { project: AnyProject }) {
-  return <ProjectCard project={project} />;
+  const caseStudy = (project as AnyProject & ProjectExtras).caseStudy;
+
+  return (
+    <div className="space-y-4">
+      <ProjectCard project={project} />
+
+      {caseStudy && (
+        <article className="space-y-4" aria-labelledby="portfolio-case-study-heading">
+          <div className="rounded-2xl border-2 border-[#B298DC]/50 bg-gradient-to-br from-[#D4B8F4]/45 to-[#B298DC]/35 p-5 sm:p-6">
+            <span className="inline-flex rounded-full border border-[#B298DC] bg-white/70 px-3 py-1 text-xs font-medium text-[#7a5b8a]">
+              Full case study
+            </span>
+            <h3 id="portfolio-case-study-heading" className="mt-3 text-[#4B3268]">
+              Inside the decisions behind {project.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-[#4B3268] sm:text-base">
+              {caseStudy.introduction}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {caseStudy.sections.map((section, index) => (
+              <section
+                key={section.label}
+                className="rounded-2xl border-2 border-[#FFB6C1]/30 bg-[#FFF0F5] p-4 shadow-sm sm:p-6"
+                aria-labelledby={`case-study-section-${index}`}
+              >
+                <div className="mb-3 flex items-center gap-3">
+                  <span
+                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full border border-[#87CEEB] bg-[#87CEEB]/25 text-sm font-semibold text-[#2B7FB5]"
+                    aria-hidden="true"
+                  >
+                    {index + 1}
+                  </span>
+                  <div>
+                    <p className="text-xs font-medium uppercase tracking-wide text-[#7a5b8a]">{section.label}</p>
+                    <h4 id={`case-study-section-${index}`} className="text-[#E9518D]">
+                      {section.title}
+                    </h4>
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed text-gray-700 sm:text-base">{section.body}</p>
+                <ul className="mt-4 space-y-2 rounded-xl border border-[#FFB6C1]/20 bg-white/70 p-3 sm:p-4">
+                  {section.points.map(point => (
+                    <li key={point} className="flex items-start gap-2 text-xs leading-relaxed text-gray-700 sm:text-sm">
+                      <span className="mt-0.5 flex-shrink-0 text-[#E9518D]" aria-hidden="true">✦</span>
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </article>
+      )}
+    </div>
+  );
 }
 
 interface ProjectsProps {
@@ -265,9 +393,9 @@ export const Projects = React.memo(function Projects({ projectFilter, onClearFil
 
   const isAllFilter = activeFilter === 'all';
   const displayedProjects = (isAllFilter && !showAll)
-    ? filteredProjects.slice(0, 4)
+    ? filteredProjects.slice(0, 5)
     : filteredProjects;
-  const hasMoreProjects = isAllFilter && filteredProjects.length > 4 && !showAll;
+  const hasMoreProjects = isAllFilter && filteredProjects.length > 5 && !showAll;
 
   // Single-project mode: opened from "View My Work" in the portfolio book
   if (projectFilter) {
@@ -296,6 +424,13 @@ export const Projects = React.memo(function Projects({ projectFilter, onClearFil
 
   return (
     <div className="space-y-6 tablet-section -mt-3 sm:-mt-6">
+      <div className="bg-[#FFF0F5] rounded-2xl p-4 border-2 border-[#FFB6C1]/30 text-center">
+        <h3 className="text-[#E9518D] mb-2">Selected product work</h3>
+        <p className="text-gray-700 text-sm max-w-2xl mx-auto">
+          Each case highlights what I owned, the engineering problem I worked through, and the result—not just the final screens.
+        </p>
+      </div>
+
       <div className="sticky top-0 z-50 -mx-3 sm:-mx-6 px-3 sm:px-6 py-2">
         <FilterPills
           options={FILTER_OPTIONS}
@@ -307,7 +442,13 @@ export const Projects = React.memo(function Projects({ projectFilter, onClearFil
 
       <AnimatePresence>
         {displayedProjects.map((project, index) => (
-          <ProjectCard key={`${project.title}-${index}`} project={project} animated filterKey={activeFilter} />
+          <ProjectCard
+            key={`${project.title}-${index}`}
+            project={project}
+            animated
+            filterKey={activeFilter}
+            onViewCaseStudy={() => window.dispatchEvent(new CustomEvent('openDevProjects', { detail: { projectTitle: project.title } }))}
+          />
         ))}
       </AnimatePresence>
 

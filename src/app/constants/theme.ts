@@ -55,6 +55,14 @@ export const COLORS = {
   STATUS_LIMITED: '#fbbf24',
   STATUS_UNAVAILABLE: '#f87171',
   STATUS_NEUTRAL: '#94a3b8',
+  STATUS_AVAILABLE_BG: '#f0fdf4',
+  STATUS_LIMITED_BG: '#fffbeb',
+  STATUS_UNAVAILABLE_BG: '#fef2f2',
+  STATUS_NEUTRAL_BG: '#f8fafc',
+  STATUS_AVAILABLE_TEXT: '#15803d',
+  STATUS_LIMITED_TEXT: '#b45309',
+  STATUS_UNAVAILABLE_TEXT: '#b91c1c',
+  STATUS_NEUTRAL_TEXT: '#475569',
 
   // ─── PURPLE SCALE (hero cards, Tomocha-palette accents, Work With Me) ───
   /** Soft pastel lavender — hero card gradient start (About Me, Work With Me) */
@@ -65,6 +73,8 @@ export const COLORS = {
   PURPLE_DEEP: '#9B7EDE',
   /** Accessible dark purple text — flexibility section labels on light bg (~4.5:1 on white) */
   PURPLE_TEXT: '#7a5b8a',
+  /** Deep purple ink — headings and body text on lavender hero surfaces */
+  PURPLE_INK: '#4B3268',
 
   // ─── GRADIENT STOPS ──────────────────────────────────────────────────────
   /** Deeper sky blue — gradient end for blue-tinted cards */

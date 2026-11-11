@@ -1,5 +1,6 @@
 import React, { Component, ErrorInfo, ReactNode, startTransition } from 'react';
 import { AlertTriangle, RefreshCw, ArrowRight, BookOpen, Home } from 'lucide-react';
+import { isModuleLoadError } from '../../utils/lazyWithRecovery';
 
 interface TabletVariantProps {
   variant: 'tablet';
@@ -44,6 +45,11 @@ export class SectionErrorBoundary extends Component<Props, State> {
   }
 
   handleRetry = () => {
+    if (isModuleLoadError(this.state.error)) {
+      window.location.reload();
+      return;
+    }
+
     startTransition(() => {
       this.setState({ hasError: false, error: undefined });
     });
@@ -55,6 +61,7 @@ export class SectionErrorBoundary extends Component<Props, State> {
     }
 
     if (this.props.variant === 'resume') {
+      const retryLabel = isModuleLoadError(this.state.error) ? 'Reload App' : 'Try Again';
       return (
         <div className="min-h-screen bg-gradient-to-br from-[#FFF0F5] to-[#FFB6C1]/30 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl border-4 border-[#FFB6C1] p-8 max-w-sm w-full text-center">
@@ -83,7 +90,7 @@ export class SectionErrorBoundary extends Component<Props, State> {
                 className="flex items-center justify-center gap-2 px-6 py-2.5 bg-[#E9518D] hover:bg-[#E9518D]/80 text-white rounded-full transition-all hover:scale-105 text-sm"
               >
                 <RefreshCw className="w-4 h-4" />
-                Try Again
+                {retryLabel}
               </button>
               <button
                 onClick={this.props.onGoHome}

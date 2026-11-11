@@ -89,7 +89,7 @@ export function EducationCredentials() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {aboutMe.skills.map((skillGroup, i) => (
             <div key={i} className="bg-white/50 rounded-xl p-3 sm:p-4 border border-[#FFB6C1]/20">
-              <h5 className="text-[#2B7FB5] mb-2 text-sm sm:text-base">{skillGroup.category}</h5>
+              <h5 className="text-[#E9518D] mb-2 text-sm sm:text-base">{skillGroup.category}</h5>
               <div className="flex flex-wrap gap-2">
                 {skillGroup.items.map((skill, j) => (
                   <span

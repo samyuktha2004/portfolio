@@ -1,273 +1,329 @@
-# 🌸 The Bubbly Detective Portfolio
+# The Bubbly Detective Portfolio
 
-Interactive kawaii-themed portfolio built with React, TypeScript, and Tailwind CSS.
-
-**Status:** ✅ Production Ready | **Score:** 9.7/10 ⭐
+Interactive kawaii-themed portfolio built with React 18, TypeScript, and Tailwind CSS v4.
 
 ---
 
-## 🎯 Quick Overview
+## Run Locally
 
-A unique, fully accessible portfolio featuring:
-- 🏠 **Interactive Detective Room** - Isometric room with clickable hotspots
-- 📱 **Pink Tablet Modals** - Smooth, engaging section navigation
-- 📖 **Portfolio Book** - Traditional scroll view with print support
-- ⌨️ **Full Keyboard Navigation** - WCAG 2.1 AA compliant
-- 🎉 **Delightful Interactions** - Confetti, animations, fortune cookie
-- 🚀 **Performance Optimized** - Code splitting, lazy loading (60-70% bundle reduction)
-
----
-
-## 🚀 Quick Start
+The application uses standard Vite and has no Figma Make runtime dependency:
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
+pnpm build
+pnpm preview
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Core interface artwork lives in `src/assets/core`, project media lives in `src/app/imports`, and public metadata assets live in `public`.
 
 ---
 
-## ✏️ Edit Content
+## Architecture Overview
 
-All content lives in **one file** - edit once, updates everywhere:
-
-```bash
-/data/portfolioData.ts
-```
-
-Change your name, projects, about me, education, awards, etc. - all in one place!
-
----
-
-## ⌨️ Keyboard Shortcuts
-
-### Portfolio Book (Resume View):
-- `Ctrl/Cmd + P` or `Ctrl/Cmd + D` - Download Resume (with confetti! 🎉)
-- `Escape` - Back to Room
-- `Tab` - Navigate through buttons
-
-### Pink Tablet (Modal):
-- `Arrow Right/Left` - Navigate sections
-- `Home/End` - Jump to first/last section
-- `Escape` - Close tablet
-
-See [`/docs/KEYBOARD_SHORTCUTS.md`](/docs/KEYBOARD_SHORTCUTS.md) for full guide.
-
----
-
-## 📁 Project Structure
+The portfolio has three primary "views" managed by a single top-level state variable in `App.tsx`:
 
 ```
-/data/portfolioData.ts      # 📝 Single source of truth for all content
-/constants/theme.ts          # 🎨 Colors, spacing, animations, z-index
-/components/                 # ⚛️ React components
-  /book-sections/           # 📖 Portfolio book sections (lazy loaded)
-  /tablet-sections/         # 📱 Pink tablet sections (lazy loaded)
-  /ui/                      # 🧩 Reusable UI components
-/docs/                       # 📚 Comprehensive documentation
-/styles/globals.css          # 🎨 Global styles & typography
-/utils/downloadResume.ts     # 🎉 Confetti + print functionality
+App.tsx
+├── currentView: 'room' | 'book'
+├── tabletContent: TabletContent | null
+└── visitedSections: Set<string>
+```
+
+### View Modes
+
+| View | Component | Trigger |
+|------|-----------|---------|
+| Detective Room | `DetectiveRoom` (`Room`) | Default / Escape from tablet |
+| Pink Tablet | `PinkTablet` | Clicking any room hotspot |
+| Portfolio Book | `PortfolioBook` | "View Book" button or `R` key |
+
+### Component Tree
+
+```
+App.tsx
+├── ErrorBoundary (app-level crash guard)
+├── AppLoader (1-second initial splash)
+├── <a> Skip to main content (accessibility)
+├── Room OR PortfolioBook (currentView)
+│   └── SectionErrorBoundary (resume variant)
+├── PinkTablet (when tabletContent !== null)
+│   └── SectionErrorBoundary (tablet variant)
+│   └── Static tablet sections inside one lazy feature chunk
+├── Resume (hidden, screen-only preview)
+└── FortuneCookie (unlocked after all 6 sections visited)
 ```
 
 ---
 
-## 📚 Documentation
+## File Structure
 
-- **[Architecture](docs/ARCHITECTURE.md)** - System design, state management, patterns
-- **[Component API](docs/COMPONENT_API.md)** - Props, methods, event handlers
-- **[Tooltip System](docs/TOOLTIP_SYSTEM.md)** - Dual tooltip implementation details
-- **[Testing Guide](docs/TESTING.md)** - Critical features checklist, regression testing
-- **[AI Workflow](docs/AI_WORKFLOW.md)** - ⚠️ **MANDATORY: Read before making ANY changes**
-- **[Development Guide](docs/DEVELOPMENT.md)** - Setup and quick tips
-- **[Keyboard Shortcuts](docs/KEYBOARD_SHORTCUTS.md)** - Accessibility features
-
----
-
-## ✨ Key Features
-
-### 🎨 Design
-- Unique kawaii-inspired theme (baby pink palette)
-- Three distinct view modes (Room, Tablet, Book)
-- Smooth animations and hover effects
-- Professional yet playful aesthetic
-- Recruiter-friendly despite cute theme
-
-### ♿ Accessibility
-- ✅ WCAG 2.1 AA compliant
-- ✅ Full keyboard navigation
-- ✅ Screen reader support (VoiceOver, NVDA, JAWS)
-- ✅ Touch-friendly buttons (44x44px minimum)
-- ✅ Proper ARIA labels
-- ✅ Semantic HTML
-
-### 🚀 Performance
-- ✅ Code splitting with React.lazy()
-- ✅ Lazy loading for images
-- ✅ Priority loading for critical assets
-- ✅ 60-70% bundle size reduction
-- ✅ Fast load times
-- ✅ Optimized animations
-
-### 🛠️ Developer Experience
-- ✅ Single source of truth (`portfolioData.ts`)
-- ✅ Type-safe with TypeScript
-- ✅ Component-based architecture
-- ✅ Well-documented with examples
-- ✅ Easy to maintain and update
-- ✅ Consistent coding conventions
-
-### 📱 Responsive Design
-- ✅ Mobile-first approach
-- ✅ Tested on 375px (mobile), 768px (tablet), 1024px+ (desktop)
-- ✅ Touch-friendly on mobile
-- ✅ Keyboard-friendly on desktop
-- ✅ Works in all orientations
+```
+/data/portfolioData.ts          Single source of truth for all content
+/constants/theme.ts             Colors, z-index, animations
+/components/
+  DetectiveRoom.tsx             Interactive landing scene
+  PinkTablet.tsx                Modal section viewer
+  PortfolioBook.tsx             Scrollable book/resume view
+  Resume.tsx                    Screen-rendered resume
+  PrintResume.tsx               Print-optimized resume
+  /book-sections/               Sections bundled with PortfolioBook
+    HeroSection.tsx
+    TldrSection.tsx
+    AchievementsSection.tsx
+    ExperienceSection.tsx
+    ProjectsSection.tsx
+    ContactSection.tsx
+  /tablet-sections/             Sections bundled with PinkTablet
+    AboutMe.tsx
+    Projects.tsx
+    Events.tsx
+    CaseAchievements.tsx
+    EducationCredentials.tsx
+    WorkWithMe.tsx
+  /ui/                          Shared utility components
+    ErrorBoundary.tsx
+    SectionErrorBoundary.tsx
+    AppLoader.tsx
+    FortuneCookie.tsx
+    ImageWithFallback.tsx
+    RoomActionButton.tsx
+    CursorHint.tsx
+    FlippableAvatar.tsx
+    FilterPills.tsx
+    LoadingSpinner.tsx
+    StandardButton.tsx
+```
 
 ---
 
-## 🎓 What This Portfolio Demonstrates
+## State Management
 
-### Technical Skills:
-- ⚛️ **React** - Advanced patterns, hooks, lazy loading, code splitting
-- 📘 **TypeScript** - Type safety, interfaces, enums
-- 🎨 **Tailwind CSS** - Utility-first styling, responsive design
-- ♿ **Accessibility** - WCAG 2.1, ARIA, keyboard navigation
-- 🚀 **Performance** - Optimization, lazy loading, bundle size reduction
-- 🏗️ **Architecture** - Maintainable, scalable, documented
+All state lives in `App.tsx`. Cross-component communication uses a custom event bus:
 
-### Design Skills:
-- 🎨 **UI/UX Design** - User-centered, intuitive, engaging
-- 🎭 **Interaction Design** - Smooth animations, delightful micro-interactions
-- 📱 **Responsive Design** - Mobile-first, adaptive layouts
-- 🌈 **Visual Design** - Cohesive theme, color theory, typography
-- 🎯 **User Experience** - Clear navigation, multiple view modes
+```ts
+// Dispatch from any component
+window.dispatchEvent(new CustomEvent('openWorkWithMe'));
+window.dispatchEvent(new CustomEvent('openDevProjects', { detail: { projectTitle: '...' } }));
 
-### Soft Skills:
-- 🏆 **Leadership** - Award-winning projects, team leadership
-- 📝 **Communication** - Clear documentation, storytelling
-- 🎯 **Problem Solving** - Elegant solutions to UX challenges
-- 🔄 **Iteration** - Continuous improvement, optimization
-- 💡 **Creativity** - Unique concept, memorable design
+// App.tsx listens and updates state
+window.addEventListener('openWorkWithMe', handleOpenWorkWithMe);
+window.addEventListener('openDevProjects', handleOpenDevProjects);
+```
+
+This pattern avoids prop drilling through deeply nested components. Do not add more event types without documenting them here.
 
 ---
 
-## 🏆 Assessment Score
+## Sections & Navigation
 
-**Overall: 9.7/10** ⭐⭐⭐⭐⭐
+Six sections, tracked as `TabletContent`:
 
-| Category | Score |
-|----------|-------|
-| Mobile Navigation & Accessibility | 10/10 |
-| Visual Design & Aesthetics | 10/10 |
-| Performance & Optimization | 9.5/10 |
-| Data Management | 10/10 |
-| Interactive Features | 10/10 |
-| Content Quality | 9/10 |
-| Code Quality & Architecture | 9.5/10 |
-| Responsive Design | 9.5/10 |
+| Key | Section | Room Object |
+|-----|---------|-------------|
+| `about` | About Me | Character/avatar |
+| `devProjects` | Dev Projects | Laptop |
+| `events` | Events | Calendar/boards |
+| `awards` | Case Achievements | Medals/trophy |
+| `education` | Education | Books |
+| `workWithMe` | Work With Me | Smartphone |
 
-See [docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) for detailed breakdown.
+Section visit tracking drives the `FortuneCookie` easter egg:
 
----
-
-## 🔮 Optional Future Enhancements
-
-**Priority: LOW** - Portfolio is already excellent!
-
-- 🟡 WebP/AVIF image conversion (production optimization)
-- 🟡 Image CDN integration (Cloudinary, Imgix)
-- 🟡 More project case studies with metrics
-- 🟡 Video demos of projects
-- 🟡 Dark mode toggle
-- 🟡 Testimonials (when available)
+```ts
+const TOTAL_SECTIONS = 6;
+<FortuneCookie isUnlocked={visitedSections.size === TOTAL_SECTIONS} />
+```
 
 ---
 
-## 💼 For Recruiters
+## Keyboard Shortcuts
 
-### Why This Portfolio Stands Out:
+### Global (Room or Book view)
+| Key | Action |
+|-----|--------|
+| `B` | Back to room (from book view) |
+| `R` | Open portfolio book |
 
-1. **Design Engineer** - Demonstrates both design AND development skills
-2. **Accessibility First** - WCAG compliant, keyboard navigation, screen reader support
-3. **Performance Optimized** - 60-70% bundle size reduction with code splitting
-4. **Unique Concept** - Interactive detective room (memorable, not generic)
-5. **Award-Winning Projects** - Leadership experience and proven impact
-6. **Fully Functional** - Print resume, contact form, smooth interactions
-7. **Well-Documented** - Professional code quality and documentation
+### Portfolio Book
+| Key | Action |
+|-----|--------|
+| `Escape` | Back to room |
+| `Ctrl/Cmd + P` | Download/print resume |
+| `Ctrl/Cmd + D` | Download resume |
 
-### Quick Demo Points:
-- Show the **interactive room** (let them click objects)
-- Press **Ctrl+P** to download resume (with confetti! 🎉)
-- Use **arrow keys** to navigate tablet sections
-- Show **portfolio book** (traditional view with print option)
-- Highlight **awards section** (recognition and impact)
-- Demonstrate **responsive design** (works on phone, tablet, desktop)
+### Pink Tablet (Modal)
+| Key | Action |
+|-----|--------|
+| `Escape` | Close tablet |
+| `Arrow Left/Right` | Navigate between sections |
+| `Home` | Jump to first section |
+| `End` | Jump to last section |
 
----
-
-## 🛠️ Tech Stack
-
-- **Framework:** React 18
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **Icons:** Lucide React
-- **Animation:** Motion React (Framer Motion)
-- **Confetti:** canvas-confetti
-- **Build Tool:** Vite
-- **Deployment:** Ready for Vercel/Netlify/GitHub Pages
+Shortcuts are suppressed when focus is inside `<input>` or `<textarea>`.
 
 ---
 
-## 📝 Development Guidelines
+## Accessibility Features
 
-See [guidelines/Guidelines.md](guidelines/Guidelines.md) for coding conventions:
-
-- ✅ TypeScript for all components
-- ✅ Single source of truth (`/data/portfolioData.ts`)
-- ✅ Theme constants (`/constants/theme.ts`)
-- ❌ Avoid overriding typography defaults
+- **Skip link:** `<a href="#main-content">` visible on focus, fixed top-left
+- **Language:** `document.documentElement.lang = 'en'` set on mount
+- **Dialogs:** All overlays use `role="dialog" aria-modal="true" aria-labelledby`
+- **Focus traps:** `useFocusTrap` hook on PinkTablet and FortuneCookie popups
+- **Decorative images:** `alt="" aria-hidden="true"` throughout
+- **Progress indicator:** `aria-label="N of 6 sections visited"` on room counter
+- **Reduced motion:** `@media (prefers-reduced-motion: reduce)` disables all CSS animations in DetectiveRoom
+- **Touch targets:** Minimum 44×44px on all interactive elements
+- **WCAG 2.1 AA compliant**
 
 ---
 
-## 🚀 Deployment Checklist
+## Performance
 
-Ready to deploy!
+The two interaction-heavy features are code-split, while their internal sections stay together:
 
-- [] All features working
-- [x] No console errors
-- [ ] Mobile tested (375px, 768px, 1024px)
-- [ ] Desktop tested
-- [ ] Keyboard navigation tested
-- [ ] Performance optimized
-- [ ] Content up-to-date
-- [ ] Documentation complete
-- [ ] Choose hosting (Vercel, Netlify, GitHub Pages)
+```ts
+const PinkTablet = lazyWithRecovery(loadPinkTablet, 'pink-tablet');
+const PortfolioBook = lazyWithRecovery(loadPortfolioBook, 'portfolio-book');
+```
+
+This avoids a network request for every section while keeping tablet and portfolio-book code out of the initial room bundle. Both features preload on hover/focus.
+
+Additional optimizations:
+- `React.memo` on `Projects` component
+- `useMemo` for filtered project/event lists
+- Bubble positions pre-computed outside component body (prevents re-randomization on re-render)
+- `priority` prop on `ImageWithFallback` sets `loading="eager" decoding="sync"` for above-the-fold assets
+- `canvas-confetti` and print-resume support are bundled eagerly
+- `PinkTablet` and `PortfolioBook` are the only lazy feature boundaries; both preload on hover/focus and recover once from stale module chunks
+
+---
+
+## Error Handling (3 Layers)
+
+1. **App-level `ErrorBoundary`** — catches any unhandled render errors, shows a reload screen
+2. **`SectionErrorBoundary`** — wraps tablet and book views. Two variants:
+   - `tablet`: retry / next section / skip to resume
+   - `resume`: retry / go home
+   - Resets automatically when `sectionKey` prop changes
+3. **Per-image fallbacks** — `ImageWithFallback` renders an error div; event cards handle `imgError` state locally
+
+---
+
+## Content Editing
+
+All content lives in `/data/portfolioData.ts`. The components are purely presentational.
+
+### Adding a project:
+```ts
+// in portfolioData.ts → projects array
+{
+  title: 'My Project',
+  description: 'What it does.',
+  projectType: 'dev',     // 'dev' | 'design' | 'combined'
+  category: 'Web',        // display label for filter pills
+  techStack: ['React', 'TypeScript'],
+  images: [img1, img2],
+  links: { github: '...', live: '...' },
+  winner: false,
+}
+```
+
+### Adding an event:
+Add to the `events` array in `portfolioData.ts`. Register the image key in the `EVENT_IMAGES` lookup table in `Events.tsx`.
+
+---
+
+## Responsive Breakpoints
+
+| Breakpoint | Width | Notes |
+|------------|-------|-------|
+| Mobile | 375px | Radix Tooltip for hotspots |
+| Tablet | 768px (`md:`) | Transition point; desktop layout begins |
+| Laptop | 1024px+ | Custom tooltip overlay system |
+
+The room renders two entirely separate DOM trees for phone vs desktop (controlled by `md:hidden` / `hidden md:block`).
+
+---
+
+## Styling Rules
+
+- Tailwind utilities for all layout, spacing, positioning
+- Colors from `/constants/theme.ts` (not inline hex strings in new code)
+- Avoid `text-*` and `font-*` Tailwind classes — global typography is defined in `globals.css`
+- For new content images, use `<ImageWithFallback />`
+- Import local interface assets from `/src/assets`; do not use platform-specific URL schemes
+
+---
+
+## Deployment Checklist
+
+### Content
+- [ ] `portfolioData.ts` — name, title, bio, email, links all up to date
+- [ ] All project images load (open each project card, check for broken assets)
+- [ ] All event images load (check EVENT_IMAGES keys match data keys — dev console warns on mismatch)
+- [ ] All external links work: GitHub, LinkedIn, live demos, email
+- [ ] Resume content matches portfolioData (sections, dates, descriptions)
+
+### Functionality
+- [ ] All 6 room hotspots open the correct tablet section
+- [ ] Tablet arrow key navigation (← →) cycles sections correctly
+- [ ] `Home` / `End` keys jump to first/last section
+- [ ] `Escape` closes the tablet
+- [ ] `R` key opens portfolio book; `Escape` / `B` returns to room
+- [ ] Print/download resume (Ctrl+P and the download button) produces `PrintResume` output, not the interactive page
+- [ ] Contact form: submits successfully, shows "Sent!" confirmation
+- [ ] Contact form: repeated submit within 1 minute is rate-limited with a message
+- [ ] Contact form: shows pre-filled mailto fallback if submission fails (test by temporarily breaking the API key)
+- [ ] Fortune cookie unlocks after visiting all 6 sections; confetti fires; fortunes don't repeat within a cycle
+- [ ] "Skip to main content" link appears on first Tab press and navigates correctly
+
+### Error handling
+- [ ] Temporarily throw in one tablet section — `SectionErrorBoundary` shows retry/skip options
+- [ ] Navigating away from the errored section clears the error (no stale error on return)
+- [ ] Break one image src — `ImageWithFallback` renders the error placeholder, not a broken image icon
+
+### Accessibility
+- [ ] Tab through everything with keyboard only — every interactive element reachable
+- [ ] All modals trap focus (tablet, fortune cookie popups)
+- [ ] Screen reader announces dialog titles on open (VoiceOver or NVDA spot-check)
+- [ ] All images have alt text or `aria-hidden="true"`
+- [ ] Touch targets ≥ 44px on mobile — tap all buttons on an actual device
+
+### Performance
+- [ ] Lighthouse score ≥ 90 on Performance, Accessibility, Best Practices
+- [ ] No console errors or warnings (fix any EVENT_IMAGES key mismatches from dev warnings)
+- [ ] Network tab: initial bundle is not bloated; sections lazy-load on first open
+- [ ] Images below the fold load lazily (check Network tab — no eager loading of off-screen assets)
+
+### Cross-browser
+- [ ] Chrome / Edge
+- [ ] Safari (macOS)
+- [ ] Safari (iOS) — test on actual device, DevTools resize is not sufficient
+- [ ] Firefox
+
+### Deployment
+- [ ] Choose hosting: Vercel / Netlify / GitHub Pages
 - [ ] Configure custom domain (optional)
-- [ ] Set up analytics (optional)
-- [ ] Share with recruiters! 🎉
+- [ ] Environment variables set if any (Web3Forms key is currently hardcoded — consider moving to `.env`)
 
 ---
 
-## 📊 Status
+## Tech Stack
 
-**Last Updated:** December 25, 2024  
-**Deployment Status:** ✅ Production Ready  
-**Recommendation:** Deploy with confidence! 🚀
-
----
-
-## 🙏 Acknowledgments
-
-Built with modern web technologies and best practices:
-- React team for the amazing framework
-- Tailwind CSS for the utility-first approach
-- Lucide for beautiful icons
-- Figma Make for the development environment
+| Tool | Version | Purpose |
+|------|---------|---------|
+| React | 18 | UI framework |
+| TypeScript | Latest | Type safety |
+| Tailwind CSS | v4 | Styling |
+| Vite | Latest | Build tool |
+| Motion (Framer) | Latest | Animations |
+| Lucide React | Latest | Icons |
+| Radix UI | Latest | Accessible primitives |
+| canvas-confetti | Latest | Confetti effects |
 
 ---
 
-**Made with 💖 and ✨ by The Bubbly Detective**
+## Known Issues & Improvement Opportunities
 
-*Positioning as a Design Engineer who can design it AND build it!*
+See `plans/improvements.md` for the tracked list.

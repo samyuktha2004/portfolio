@@ -3,8 +3,8 @@ import { User } from 'lucide-react';
 import { useMultiImageLoader } from '../../hooks/useImageLoader';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ANIMATIONS } from '../../constants/theme';
-import cartoonAvatar from 'figma:asset/681108ac8efade408dd6dd082f54b3e7f0559340.png';
-import actualPhoto from 'figma:asset/62a5dd36a1b4d3a61349ef362a3d09ea81e8b486.png';
+import cartoonAvatar from '../../../assets/core/cartoon-avatar.png';
+import actualPhoto from '../../../assets/core/profile-photo.png';
 
 interface FlippableAvatarProps {
   size?: 'small' | 'medium' | 'large';

@@ -6,7 +6,7 @@ export function ExperienceSection() {
   return (
     <section className="py-20 px-4 bg-white" id="experience" aria-labelledby="experience-heading">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center gap-3 mb-12 text-left">
           <Briefcase className="w-8 h-8 text-[#E9518D]" aria-hidden="true" />
           <h2 id="experience-heading" className="text-[#E9518D]">Leadership Experience</h2>
         </div>

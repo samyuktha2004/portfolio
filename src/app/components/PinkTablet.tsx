@@ -1,20 +1,17 @@
-import React, { lazy, Suspense } from 'react';
+import React from 'react';
 import { ArrowRight, X, ArrowLeft, Mail } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from './ui/tooltip';
 import type { TabletContent } from '../App';
-import { LoadingSpinner } from './ui/LoadingSpinner';
 import { SectionErrorBoundary } from './ui/SectionErrorBoundary';
 import { sectionTitles } from '../data/portfolioData';
 import { COLORS } from '@/constants/theme';
 import { useFocusTrap } from '../hooks/useFocusTrap';
-
-// Lazy load all tablet section components for better performance
-const Projects = lazy(() => import('./tablet-sections/Projects').then(module => ({ default: module.Projects })));
-const Events = lazy(() => import('./tablet-sections/Events').then(module => ({ default: module.Events })));
-const CaseAchievements = lazy(() => import('./tablet-sections/CaseAchievements').then(module => ({ default: module.CaseAchievements })));
-const EducationCredentials = lazy(() => import('./tablet-sections/EducationCredentials').then(module => ({ default: module.EducationCredentials })));
-const AboutMe = lazy(() => import('./tablet-sections/AboutMe').then(module => ({ default: module.AboutMe })));
-const WorkWithMe = lazy(() => import('./tablet-sections/WorkWithMe').then(module => ({ default: module.WorkWithMe })));
+import { Projects } from './tablet-sections/Projects';
+import { Events } from './tablet-sections/Events';
+import { CaseAchievements } from './tablet-sections/CaseAchievements';
+import { EducationCredentials } from './tablet-sections/EducationCredentials';
+import { AboutMe } from './tablet-sections/AboutMe';
+import { WorkWithMe } from './tablet-sections/WorkWithMe';
 
 interface PinkTabletProps {
   content: TabletContent;
@@ -140,7 +137,7 @@ export function PinkTablet({ content, onClose, onNextCase, onNavigateToSection, 
             {/* Mobile: Stack vertically, Desktop: Side by side */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
               {/* Desktop title — the canonical dialog label target */}
-              <h2 id={dialogTitleId} className="hidden sm:block text-[#E9518D] flex-1">
+              <h2 id={dialogTitleId} className="hidden sm:block text-[#E9518D] text-left flex-1">
                 {content ? (sectionTitles as Record<string, string>)[content] : ''}
               </h2>
 
@@ -190,21 +187,13 @@ export function PinkTablet({ content, onClose, onNextCase, onNavigateToSection, 
           {/* Content area */}
           <div ref={scrollContainerRef} className="flex-1 overflow-y-auto overflow-x-hidden p-3 sm:p-6 outline-none" tabIndex={-1}>
             <SectionErrorBoundary
+              key={content ?? ''}
               variant="tablet"
               sectionKey={content ?? ''}
               onNextSection={onNextCase}
               onSkipToResume={onSkipToResume}
             >
-              <Suspense fallback={
-                <div role="status" aria-label="Loading section" className="flex items-center justify-center min-h-[400px]">
-                  <div className="flex flex-col items-center gap-4">
-                    <LoadingSpinner size="large" color="pink" />
-                    <p className="text-[#E9518D] text-sm">Loading section...</p>
-                  </div>
-                </div>
-              }>
-                {renderContent()}
-              </Suspense>
+              {renderContent()}
             </SectionErrorBoundary>
 
             {/* Footer Navigation - Only show if NOT on Work With Me */}

@@ -9,6 +9,7 @@ interface StandardButtonProps {
   label: string;
   shortLabel?: string; // For mobile
   variant?: 'primary' | 'secondary' | 'linkedin' | 'github' | 'email' | 'download';
+  size?: 'default' | 'compact';
   external?: boolean;
   type?: 'button' | 'submit';
 }
@@ -20,6 +21,7 @@ export function StandardButton({
   label,
   shortLabel,
   variant = 'primary',
+  size = 'default',
   external = false,
   type = 'button',
 }: StandardButtonProps) {
@@ -53,17 +55,20 @@ export function StandardButton({
     },
     // Download uses purple to visually distinguish from pink CTA buttons
     download: {
-      backgroundColor: '#9B7EDE',
+      backgroundColor: COLORS.PURPLE_DEEP,
       color: 'white',
-      borderColor: '#9B7EDE',
+      borderColor: COLORS.PURPLE_DEEP,
     },
   };
 
-  const baseClasses = `px-4 sm:px-6 py-3 rounded-full hover:scale-105 transition-all shadow-lg flex items-center justify-center gap-2 text-sm sm:text-base font-medium min-h-[44px] border-2`;
+  const sizeClasses = size === 'compact'
+    ? 'px-3 py-2 text-xs min-h-[44px] shadow-sm'
+    : 'px-4 sm:px-6 py-3 text-sm sm:text-base min-h-[44px] shadow-lg';
+  const baseClasses = `${sizeClasses} rounded-full hover:scale-105 transition-all flex items-center justify-center gap-2 font-medium border-2`;
 
   const content = (
     <>
-      {Icon && <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />}
+      {Icon && <Icon className={size === 'compact' ? 'w-3.5 h-3.5 flex-shrink-0' : 'w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0'} />}
       {shortLabel ? (
         <>
           <span className="hidden sm:inline">{label}</span>
@@ -148,9 +153,9 @@ export function IconButton({
       borderColor: COLORS.PINK_TEXT,
     },
     download: {
-      backgroundColor: '#B298DC',
+      backgroundColor: COLORS.PURPLE_DEEP,
       color: 'white',
-      borderColor: '#9B7EDE',
+      borderColor: COLORS.PURPLE_DEEP,
     },
   };
 

@@ -1,0 +1,17 @@
+{
+  "title": "Samyuktha's Portfolio",
+  "description": "This interactive kawaii-themed portfolio built with React, TypeScript, and Tailwind CSS was made by Samyuktha S.",
+  "robots": {
+    "index": false
+  },
+  "icons": {
+    "icon": "/.figma/make/favicon.png"
+  },
+  "openGraph": {
+    "image": "/.figma/make/social-image.png"
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

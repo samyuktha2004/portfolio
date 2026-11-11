@@ -1,24 +1,24 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar, Mic, Telescope, Lightbulb, ImageOff } from 'lucide-react';
+import { Calendar, Mic, Telescope, ImageOff, Linkedin } from 'lucide-react';
 import { FilterPills, FilterOption } from '../ui/FilterPills';
+import { StandardButton } from '../ui/StandardButton';
 import { events, EventEntry } from '../../data/portfolioData';
 import devfestImg from '@/imports/devfest.jpeg';
 import aiImpactImg from '@/imports/aiimpact.jpeg';
-import shoptalkImg from '@/imports/shoptalk.jpeg';
 import digitalDivasImg from '@/imports/DigitalDivas.jpeg';
+import configIndiaImg from '@/imports/config-india-going-places.png';
 
 const EVENT_IMAGES: Record<string, string> = {
   devfest: devfestImg,
   aiimpact: aiImpactImg,
-  shoptalk: shoptalkImg,
   digitalDivas: digitalDivasImg,
+  configIndia: configIndiaImg,
 };
 
 const FILTER_OPTIONS: FilterOption[] = [
   { id: 'all',       label: 'All',       emoji: '📅' },
   { id: 'hosted',    label: 'Core Team',    emoji: '🎙️' },
   { id: 'exhibited', label: 'Exhibited', emoji: '🚀' },
-  { id: 'attended',  label: 'Attended',  emoji: '💡' },
 ];
 
 const CATEGORY_CONFIG: Record<EventEntry['category'], {
@@ -39,12 +39,6 @@ const CATEGORY_CONFIG: Record<EventEntry['category'], {
     badgeColor: '#2B7FB5',
     badgeBg: '#87CEEB',
   },
-  attended: {
-    label: 'Attendee',
-    icon: Lightbulb,
-    badgeColor: '#7a5b8a',
-    badgeBg: '#B298DC',
-  },
 };
 
 function EventCard({ event }: { event: EventEntry }) {
@@ -52,7 +46,12 @@ function EventCard({ event }: { event: EventEntry }) {
   const [imgError, setImgError] = useState(false);
   const cfg = CATEGORY_CONFIG[event.category];
   const BadgeIcon = cfg.icon;
-  const resolvedImage = event.image ? (EVENT_IMAGES[event.image] ?? event.image) : undefined;
+  const resolvedImage = event.image
+    ? (EVENT_IMAGES[event.image] ?? (
+        import.meta.env.DEV && console.warn(`[Events] No image registered for key "${event.image}"`),
+        event.image
+      ))
+    : undefined;
 
   return (
     <div className="relative rounded-2xl overflow-hidden border-2 border-[#FFB6C1]/30 shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 bg-[#FFF0F5]">
@@ -111,6 +110,20 @@ function EventCard({ event }: { event: EventEntry }) {
         <p className="text-xs sm:text-sm text-gray-600 leading-relaxed break-words -mt-1">
           {event.highlights}
         </p>
+
+        {event.postUrl && (
+          <div className="flex justify-end pt-1">
+            <StandardButton
+              href={event.postUrl}
+              icon={Linkedin}
+              label="View LinkedIn post"
+              shortLabel="LinkedIn post"
+              variant="linkedin"
+              size="compact"
+              external
+            />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -120,8 +133,11 @@ export function Events() {
   const [activeFilter, setActiveFilter] = useState('all');
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'all') return events;
-    return events.filter(e => e.category === activeFilter);
+    const matchingEvents = activeFilter === 'all'
+      ? events
+      : events.filter(e => e.category === activeFilter);
+
+    return [...matchingEvents].sort((a, b) => b.sortDate.localeCompare(a.sortDate));
   }, [activeFilter]);
 
   return (

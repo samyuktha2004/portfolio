@@ -1,22 +1,31 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 
+const BUBBLES = Array.from({ length: 15 }, () => ({
+  width: Math.random() * 100 + 50,
+  height: Math.random() * 100 + 50,
+  left: Math.random() * 100,
+  top: Math.random() * 100,
+  animationDelay: Math.random() * 5,
+  animationDuration: Math.random() * 10 + 10,
+}));
+
 export function AppLoader() {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-[#FFF0F5] to-[#FFB6C1] flex items-center justify-center z-[99999] overflow-hidden">
       {/* Floating bubbles background - same as detective room */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
+        {BUBBLES.map((b, i) => (
           <div
             key={i}
             className="absolute rounded-full bg-white/20 animate-float"
             style={{
-              width: `${Math.random() * 100 + 50}px`,
-              height: `${Math.random() * 100 + 50}px`,
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${Math.random() * 10 + 10}s`,
+              width: `${b.width}px`,
+              height: `${b.height}px`,
+              left: `${b.left}%`,
+              top: `${b.top}%`,
+              animationDelay: `${b.animationDelay}s`,
+              animationDuration: `${b.animationDuration}s`,
             }}
           />
         ))}

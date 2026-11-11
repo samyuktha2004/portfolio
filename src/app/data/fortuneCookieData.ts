@@ -7,10 +7,10 @@
 export const fortuneCookieFacts = [
   "🎢 I love adventure sports and theme parks! 🎢",
   "🥇 I won 1st place at Infosys Hackathon competing against professionals (as a student)! 🥇",
-  "🙈 I create 10 variations of the same design 🙈",
+  "🙈 I create 10 variations of the same product 🙈",
   "🌸 I believe bubbly, kawaii design is a real design aesthetic! 🌸",
-  "🏆 I'm in the top 5% of my class with a 9.47 CGPA 🏆",
-  "🎀 I have wayyy too many hobbies to keep track of 🎀",
+  "🏆 I'm in the top 5% of my class with a 9.5 CGPA 🏆",
+  "🎀 I like bringing real world elements in my products 🎀",
   "🎸 I shot my own music video and edited it on iMovie when I was 14 🎸",
   "🥠 This fortune cookie easter egg and flippable profile image are my favourite parts of this portfolio! 👩🏻",
   "💖 I have my own self-love blog named The Sam Before The Storm on Wordpress 💖",

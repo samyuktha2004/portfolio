@@ -7,9 +7,9 @@ export function TldrSection() {
     <div className="bg-white py-12 sm:py-16">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-8">
-          <h2 className="text-[#E9518D] mb-2 text-2xl sm:text-3xl">📋 Quick Summary</h2>
+          <h2 className="text-[#E9518D] mb-2 text-2xl sm:text-3xl">Quick recruiter summary</h2>
           <p className="text-[#E9518D]/90 text-sm sm:text-base">
-            Everything you need to know about me!
+            Role fit, technical range, proof of impact, and availability at a glance.
           </p>
         </div>
 

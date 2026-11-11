@@ -1,9 +1,13 @@
-import React from 'react';
-import { Linkedin, Award, Star, Calendar } from 'lucide-react';
+import React, { useState } from 'react';
+import { Linkedin, Award, Star, Calendar, ChevronDown, ChevronUp } from 'lucide-react';
 import { achievements, personalInfo } from '../../data/portfolioData';
 import { COLORS } from '@/constants/theme';
+import { StandardButton } from '../ui/StandardButton';
 
 export function CaseAchievements() {
+  const [showMore, setShowMore] = useState(false);
+  const visibleAchievements = showMore ? achievements : achievements.slice(0, 3);
+
   return (
     <div className="space-y-6 tablet-section">
       {/* LinkedIn CTA */}
@@ -28,7 +32,7 @@ export function CaseAchievements() {
       
       {/* Achievement Cards */}
       <div className="grid grid-cols-1 gap-4">
-        {achievements.map((achievement, index) => (
+        {visibleAchievements.map((achievement, index) => (
           <div
             key={index}
             className="bg-[#FFF0F5] rounded-2xl p-4 sm:p-6 border-2 border-[#FFB6C1]/30 shadow-md hover:shadow-lg hover:-translate-y-0.5 hover:border-[#FFB6C1] transition-all duration-200"
@@ -58,10 +62,21 @@ export function CaseAchievements() {
         ))}
       </div>
 
-      {/* Motivational Footer */}
+      {achievements.length > 3 && (
+        <div className="flex justify-center">
+          <StandardButton
+            icon={showMore ? ChevronUp : ChevronDown}
+            label={showMore ? 'Show fewer achievements' : `View ${achievements.length - 3} more achievements`}
+            shortLabel={showMore ? 'Show less' : 'View more'}
+            variant="secondary"
+            onClick={() => setShowMore(current => !current)}
+          />
+        </div>
+      )}
+
       <div className="bg-[#FFF0F5] rounded-2xl p-4 sm:p-6 border-2 border-[#FFB6C1]/30 text-center">
         <p className="text-gray-700 text-sm sm:text-base break-words">
-          ✨ Every achievement represents growth, learning, and passion for creating meaningful experiences ✨
+          Recognition across applied AI, product design, accessibility, game development, and academic performance.
         </p>
       </div>
     </div>

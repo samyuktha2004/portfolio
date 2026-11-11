@@ -1,19 +1,31 @@
-import React, { useState, useEffect, lazy, Suspense, startTransition } from 'react';
+import React, { useState, useEffect, Suspense, startTransition } from 'react';
 import { Room } from './components/DetectiveRoom';
+import { PrintResume } from './components/PrintResume';
 import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { AppLoader } from './components/ui/AppLoader';
 import { FortuneCookie } from './components/ui/FortuneCookie';
 import { SectionErrorBoundary } from './components/ui/SectionErrorBoundary';
-
-// Lazy load heavy components
-const PinkTablet = lazy(() => import('./components/PinkTablet').then(m => ({ default: m.PinkTablet })));
-const PortfolioBook = lazy(() => import('./components/PortfolioBook').then(m => ({ default: m.PortfolioBook })));
-const Resume = lazy(() => import('./components/Resume').then(m => ({ default: m.Resume })));
-const PrintResume = lazy(() => import('./components/PrintResume').then(m => ({ default: m.PrintResume })));
+import { lazyWithRecovery } from './utils/lazyWithRecovery';
 
 export type TabletContent = 'devProjects' | 'events' | 'awards' | 'education' | 'about' | 'workWithMe' | null;
 
 const TOTAL_SECTIONS = 6; // about, devProjects, events, awards, education, workWithMe
+
+const loadPinkTablet = () =>
+  import('./components/PinkTablet').then(module => ({ default: module.PinkTablet }));
+const loadPortfolioBook = () =>
+  import('./components/PortfolioBook').then(module => ({ default: module.PortfolioBook }));
+
+const PinkTablet = lazyWithRecovery(loadPinkTablet, 'pink-tablet');
+const PortfolioBook = lazyWithRecovery(loadPortfolioBook, 'portfolio-book');
+
+const preloadPinkTablet = () => {
+  void loadPinkTablet().catch(() => undefined);
+};
+
+const preloadPortfolioBook = () => {
+  void loadPortfolioBook().catch(() => undefined);
+};
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'room' | 'book'>('room');
@@ -131,6 +143,8 @@ export default function App() {
           <Room
             onHotspotClick={handleHotspotClick}
             onViewBook={() => startTransition(() => setCurrentView('book'))}
+            onPreloadTablet={preloadPinkTablet}
+            onPreloadBook={preloadPortfolioBook}
             visitedSections={visitedSections}
           />
         ) : (
@@ -143,7 +157,10 @@ export default function App() {
                 </div>
               </div>
             }>
-              <PortfolioBook onBackToRoom={() => setCurrentView('room')} />
+              <PortfolioBook
+                onBackToRoom={() => setCurrentView('room')}
+                onPreloadTablet={preloadPinkTablet}
+              />
             </Suspense>
           </SectionErrorBoundary>
         )}
@@ -172,12 +189,6 @@ export default function App() {
           </Suspense>
         )}
 
-        <div className="resume-wrapper hidden print:block">
-          <Suspense fallback={null}>
-            <Resume />
-          </Suspense>
-        </div>
-
         {/* Fortune Cookie - only unlocked when all sections visited */}
         <FortuneCookie
           isUnlocked={visitedSections.size === TOTAL_SECTIONS}
@@ -188,9 +199,7 @@ export default function App() {
 
       {/* Print-only resume - separate from website content */}
       <div className="print-only-resume">
-        <Suspense fallback={null}>
-          <PrintResume />
-        </Suspense>
+        <PrintResume />
       </div>
     </ErrorBoundary>
   );
